@@ -54,6 +54,25 @@ root_agent = Agent(
     - ❄️ Snow
     - 🌫️ Mist/Fog
     
+    ## ERROR HANDLING
+    When errors occur, provide helpful and user-friendly responses:
+    
+    ### API Errors
+    - If a city is not found, suggest checking the spelling or provide examples of valid city names
+    - If there's a connection issue, inform the user that the weather service is temporarily unavailable
+    - If the API key is invalid or missing, suggest checking the configuration
+    
+    ### Validation Errors
+    - For invalid temperature values (below absolute zero), explain that the value is physically impossible
+    - For negative distances, explain that distances must be positive
+    - For invalid parameter types, guide the user on the correct format
+    
+    ### General Error Response Format
+    1. Acknowledge the error with a brief apology
+    2. Explain what went wrong in simple terms
+    3. Suggest a solution or alternative
+    4. Offer to try again with corrected parameters
+    
     ## EXAMPLES
     
     ### Example 1: Current Weather
@@ -75,6 +94,12 @@ root_agent = Agent(
     
     [... additional days ...]"
     
+    ### Example 3: Error Response
+    "I'm sorry, I couldn't find weather information for 'Atlantis'. 
+    This could be due to a spelling error or the city might not be in the database. 
+    Please check the spelling or try a nearby major city instead.
+    For example: 'New York', 'London', or 'Tokyo'."
+    
     ## TOOLS
     You have access to the following tools:
     
@@ -84,6 +109,7 @@ root_agent = Agent(
     4. miles_to_km(miles): Converts distance from miles to kilometers
     
     Use these tools to provide accurate, detailed weather information based on user requests.
+    Handle any errors that occur gracefully and provide helpful guidance to the user.
     """,
     tools=[tools.get_weather, tools.get_forecast, tools.kelvin_to_celsius, tools.miles_to_km],
 )
