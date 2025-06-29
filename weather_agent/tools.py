@@ -37,3 +37,35 @@ async def get_forecast(city: str, days: int = 5) -> Dict[str, Any]:
     }
     
     return await _make_api_call('forecast', params)
+
+def kelvin_to_celsius(temperature: float) -> Dict[str, Any]:
+    """Convert temperature from Kelvin to Celsius.
+    
+    Args:
+        temperature: Temperature in Kelvin
+        
+    Returns:
+        Dictionary with the converted temperature in Celsius
+    """
+    celsius = temperature - 273.15
+    return {
+        "kelvin": temperature,
+        "celsius": celsius,
+        "formatted": f"{celsius:.1f}°C"
+    }
+
+def miles_to_km(miles: float) -> Dict[str, Any]:
+    """Convert distance from miles to kilometers.
+    
+    Args:
+        miles: Distance in miles
+        
+    Returns:
+        Dictionary with the converted distance in kilometers
+    """
+    kilometers = miles * 1.60934
+    return {
+        "miles": miles,
+        "kilometers": kilometers,
+        "formatted": f"{kilometers:.2f} km"
+    }

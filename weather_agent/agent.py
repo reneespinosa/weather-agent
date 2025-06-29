@@ -11,6 +11,8 @@ root_agent = Agent(
     You can use the following tools:
     - Get weather information for a given city.
     - Get forecast for a given city.
+    - Convert temperature from Kelvin to Celsius.
+    - Convert distance from miles to kilometers.
     """,
-    tools=[tools.get_weather, tools.get_forecast],
+    tools=[tools.get_weather, tools.get_forecast, tools.kelvin_to_celsius, tools.miles_to_km],
 )
