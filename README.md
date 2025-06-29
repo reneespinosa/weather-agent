@@ -1,4 +1,4 @@
-# Weather Agent: Multi-Paradigm Programming Final Project
+# Weather Agent: Programming Languages Final Project
 
 ![Weather Agent](https://img.shields.io/badge/Weather%20Agent-1.0.0-blue)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-brightgreen)
