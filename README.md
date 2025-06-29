@@ -3,6 +3,7 @@
 ![Weather Agent](https://img.shields.io/badge/Weather%20Agent-1.0.0-blue)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-brightgreen)
 ![ADK](https://img.shields.io/badge/Google%20ADK-Latest-orange)
+![Gemini](https://img.shields.io/badge/Gemini%20API-2.5-purple)
 
 A sophisticated weather agent built with Google's Agent Development Kit (ADK) that demonstrates multiple programming paradigms including functional, imperative, and asynchronous programming. This project serves as the final assignment for the Programming Languages course.
 
@@ -15,6 +16,8 @@ Weather Agent is an intelligent assistant that provides comprehensive meteorolog
 - **Asynchronous Programming**: Non-blocking API calls for improved performance
 - **Object-Oriented Programming**: Custom exception classes and structured data models
 
+The agent is powered by Google's Gemini AI model, providing natural language understanding and generation capabilities that enable intuitive interactions with users.
+
 ## Features
 
 ### Core Capabilities
@@ -23,6 +26,7 @@ Weather Agent is an intelligent assistant that provides comprehensive meteorolog
 - **Weather Forecasts**: 5-day forecasts with 3-hour intervals
 - **Weather Trend Analysis**: Temperature trends, dominant conditions, and statistical analysis
 - **Unit Conversions**: Temperature and distance conversions with multiple formats
+- **Natural Language Understanding**: Powered by Google's Gemini AI model
 
 ### Technical Highlights
 
@@ -30,12 +34,13 @@ Weather Agent is an intelligent assistant that provides comprehensive meteorolog
 - **Functional Programming Utilities**: Pure functions, higher-order functions, and functional data processing
 - **Asynchronous API Integration**: Non-blocking API calls using aiohttp
 - **Comprehensive Logging**: Detailed logging for debugging and monitoring
+- **AI-Powered Interactions**: Gemini API integration for natural language processing
 
 ## Architecture
 
 The project is structured around the following components:
 
-- `agent.py`: Main agent configuration and prompt engineering
+- `agent.py`: Main agent configuration and prompt engineering using Gemini AI
 - `tools.py`: Core functionality including API calls and basic utilities
 - `functional.py`: Functional programming utilities and data transformations
 - `config.py`: Configuration settings and environment variables
@@ -67,6 +72,7 @@ The project is structured around the following components:
   - `python-dotenv`: For environment variable management
   - `google-adk`: For agent development framework
 - OpenWeatherMap API key
+- Google Gemini API key
 
 ## Installation
 
@@ -84,9 +90,12 @@ The project is structured around the following components:
 3. Create a `.env` file in the project root with:
    ```
    WEATHER_API_KEY=your_openweathermap_api_key
+   GEMINI_API_KEY=your_gemini_api_key
    ```
    
-   > **Note**: Register on [OpenWeatherMap](https://openweathermap.org/) to get a free API key (it may take a few hours to activate).
+   > **Note**: 
+   > - Register on [OpenWeatherMap](https://openweathermap.org/) to get a free API key (it may take a few hours to activate).
+   > - Get a Gemini API key from the [Google AI Studio](https://ai.google.dev/) or [Google Cloud Console](https://console.cloud.google.com/).
 
 ## Usage
 
@@ -127,6 +136,17 @@ The `analyze_weather_trends` tool demonstrates functional programming principles
 5. Composing functions for complex data processing
 
 Results include temperature trends (warming, cooling, stable), dominant weather conditions, temperature ranges, and daily averages.
+
+## AI Integration with Gemini
+
+The Weather Agent leverages Google's Gemini AI model to provide:
+
+1. **Natural Language Understanding**: The agent can interpret a wide variety of weather-related queries in natural language
+2. **Contextual Responses**: Responses are tailored to the specific query and context
+3. **Intelligent Error Handling**: When errors occur, the agent provides helpful suggestions in natural language
+4. **Conversational Experience**: Users can interact with the agent in a conversational manner
+
+The Gemini integration is configured in `agent.py` with a carefully crafted prompt that guides the model's behavior and response format.
 
 ## Error Handling
 
