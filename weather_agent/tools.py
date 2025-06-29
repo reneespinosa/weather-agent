@@ -2,7 +2,9 @@ import os
 import aiohttp
 import logging
 import asyncio
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List, Callable, Tuple
+from functools import reduce, partial
+from datetime import datetime
 from .config import WEATHER_API_KEY, LANGUAGE, BASE_WEATHER_URL
 
 # Configure logging
@@ -198,3 +200,191 @@ def miles_to_km(miles: float) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error converting distance: {str(e)}")
         raise ValueError(f"Failed to convert distance: {str(e)}")
+
+# New tool using functional programming paradigm
+async def analyze_weather_trends(city: str, days: int = 5) -> Dict[str, Any]:
+    """Analyze weather trends for a city using functional programming.
+    
+    This function demonstrates functional programming concepts:
+    - Pure functions
+    - Higher-order functions
+    - Function composition
+    - Map, filter, reduce operations
+    - Immutability
+    
+    Args:
+        city: City name
+        days: Number of days to analyze (1-5)
+        
+    Returns:
+        Dictionary with weather trend analysis
+        
+    Raises:
+        ValidationError: If parameters are invalid
+        WeatherAPIError: If the API returns an error
+    """
+    # Validate parameters
+    if not city or not isinstance(city, str) or len(city.strip()) == 0:
+        logger.error("Invalid city parameter")
+        raise ValidationError("City name must be a non-empty string")
+    
+    if not isinstance(days, int) or days < 1 or days > 5:
+        logger.error(f"Invalid days parameter: {days}")
+        raise ValidationError("Days must be an integer between 1 and 5")
+    
+    try:
+        forecast_data = await get_forecast(city, days)
+
+        def extract_temperatures(data: Dict[str, Any]) -> List[float]:
+            """Extract temperature values from forecast data."""
+            if 'list' not in data:
+                return []
+            return list(map(
+                lambda item: item['main']['temp'],
+                data['list']
+            ))
+        
+        # Pure function to convert Kelvin to Celsius
+        def k_to_c(temp: float) -> float:
+            """Convert Kelvin to Celsius."""
+            return temp - 273.15
+        
+        # Higher-order function for formatting
+        def format_temp(temp: float) -> str:
+            """Format temperature with unit."""
+            return f"{k_to_c(temp):.1f}°C"
+        
+        # Pure function to calculate average using reduce
+        def average(values: List[float]) -> float:
+            """Calculate average of values using reduce."""
+            if not values:
+                return 0.0
+            return reduce(lambda acc, val: acc + val, values, 0) / len(values)
+        
+        # Pure function to calculate temperature changes
+        def calculate_changes(temps: List[float]) -> List[float]:
+            """Calculate temperature changes between consecutive readings."""
+            return list(map(
+                lambda i: temps[i] - temps[i-1] if i > 0 else 0,
+                range(len(temps))
+            ))
+        
+        # Pure function to determine weather condition frequency
+        def condition_frequency(data: Dict[str, Any]) -> Dict[str, int]:
+            """Count frequency of each weather condition."""
+            if 'list' not in data:
+                return {}
+
+            conditions = list(map(
+                lambda item: item['weather'][0]['main'],
+                data['list']
+            ))
+            
+
+            return reduce(
+                lambda acc, condition: {
+                    **acc, 
+                    condition: acc.get(condition, 0) + 1
+                },
+                conditions,
+                {}
+            )
+        
+        # Pure function to find dominant condition
+        def dominant_condition(condition_counts: Dict[str, int]) -> Tuple[str, int]:
+            """Find the most frequent weather condition."""
+            if not condition_counts:
+                return ("Unknown", 0)
+            
+            return max(
+                condition_counts.items(),
+                key=lambda item: item[1]
+            )
+        
+
+        def categorize_trend(changes: List[float]) -> str:
+            """Categorize temperature trend based on changes."""
+            if not changes:
+                return "stable"
+            
+
+            significant_changes = list(filter(
+                lambda change: abs(change) > 1,
+                changes
+            ))
+            
+
+            trend_sum = sum(changes)
+            
+            if len(significant_changes) <= len(changes) * 0.2:
+                return "stable"
+            elif trend_sum > 0:
+                return "warming"
+            else:
+                return "cooling"
+        
+
+        def analyze_data(data: Dict[str, Any]) -> Dict[str, Any]:
+            """Analyze weather data using function composition."""
+            temps = extract_temperatures(data)
+            temp_changes = calculate_changes(temps)
+            conditions = condition_frequency(data)
+            main_condition, condition_count = dominant_condition(conditions)
+            
+            # Map temperatures to Celsius
+            celsius_temps = list(map(k_to_c, temps))
+            
+            # Filter for temperature extremes
+            if celsius_temps:
+                min_temp = min(celsius_temps)
+                max_temp = max(celsius_temps)
+                temp_range = max_temp - min_temp
+            else:
+                min_temp = max_temp = temp_range = 0
+            
+
+            if 'list' in data:
+
+                days_data = reduce(
+                    lambda acc, item: {
+                        **acc,
+                        datetime.fromtimestamp(item['dt']).strftime('%Y-%m-%d'): [
+                            *acc.get(datetime.fromtimestamp(item['dt']).strftime('%Y-%m-%d'), []),
+                            item
+                        ]
+                    },
+                    data['list'],
+                    {}
+                )
+                
+
+                daily_averages = list(map(
+                    lambda day_items: {
+                        'date': day_items[0],
+                        'avg_temp': average([item['main']['temp'] for item in day_items[1]])
+                    },
+                    days_data.items()
+                ))
+            else:
+                daily_averages = []
+            
+            return {
+                'city': data.get('city', {}).get('name', city),
+                'country': data.get('city', {}).get('country', ''),
+                'average_temp': f"{k_to_c(average(temps)):.1f}°C",
+                'min_temp': f"{min_temp:.1f}°C",
+                'max_temp': f"{max_temp:.1f}°C",
+                'temp_range': f"{temp_range:.1f}°C",
+                'trend': categorize_trend(temp_changes),
+                'dominant_condition': main_condition,
+                'condition_frequency': conditions,
+                'daily_averages': daily_averages,
+                'data_points': len(temps),
+                'analysis_timestamp': datetime.now().isoformat()
+            }
+
+        return analyze_data(forecast_data)
+        
+    except Exception as e:
+        logger.error(f"Error analyzing weather trends for {city}: {str(e)}")
+        raise

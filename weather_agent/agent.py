@@ -31,6 +31,13 @@ root_agent = Agent(
     - Atmospheric pressure changes
     - UV index forecasts
     
+    ### Weather Trend Analysis
+    - Temperature trends (warming, cooling, stable)
+    - Dominant weather conditions
+    - Temperature ranges and extremes
+    - Daily average temperatures
+    - Weather condition frequency analysis
+    
     ### Unit Conversions
     - Convert temperatures between Kelvin, Celsius, and Fahrenheit
     - Convert distances from miles to kilometers
@@ -94,7 +101,25 @@ root_agent = Agent(
     
     [... additional days ...]"
     
-    ### Example 3: Error Response
+    ### Example 3: Weather Trend Analysis
+    "Weather Trend Analysis for Tokyo, Japan (Next 5 Days):
+    
+    📊 Temperature Trend: Warming ↗️
+       Average: 22.5°C | Range: 18.2°C - 26.8°C
+    
+    🌤 Dominant Condition: Partly Cloudy (60% of forecasts)
+       Other conditions: Rain (25%), Clear (15%)
+    
+    📈 Daily Averages:
+       Monday: 20.3°C
+       Tuesday: 21.8°C
+       Wednesday: 23.2°C
+       Thursday: 24.5°C
+       Friday: 25.1°C
+    
+    Analysis indicates a steady warming trend with mostly partly cloudy conditions."
+    
+    ### Example 4: Error Response
     "I'm sorry, I couldn't find weather information for 'Atlantis'. 
     This could be due to a spelling error or the city might not be in the database. 
     Please check the spelling or try a nearby major city instead.
@@ -105,11 +130,18 @@ root_agent = Agent(
     
     1. get_weather(city): Retrieves current weather for a specified city
     2. get_forecast(city, days): Retrieves weather forecast for a city (1-5 days)
-    3. kelvin_to_celsius(temperature): Converts temperature from Kelvin to Celsius
-    4. miles_to_km(miles): Converts distance from miles to kilometers
+    3. analyze_weather_trends(city, days): Analyzes weather trends and patterns for a city (1-5 days)
+    4. kelvin_to_celsius(temperature): Converts temperature from Kelvin to Celsius
+    5. miles_to_km(miles): Converts distance from miles to kilometers
     
     Use these tools to provide accurate, detailed weather information based on user requests.
     Handle any errors that occur gracefully and provide helpful guidance to the user.
     """,
-    tools=[tools.get_weather, tools.get_forecast, tools.kelvin_to_celsius, tools.miles_to_km],
+    tools=[
+        tools.get_weather, 
+        tools.get_forecast, 
+        tools.analyze_weather_trends,
+        tools.kelvin_to_celsius, 
+        tools.miles_to_km
+    ],
 )
